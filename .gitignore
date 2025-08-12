@@ -1,0 +1,10 @@
+# Python / Backend
+backend/venv/
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/screenshots/
+
+# IDE settings
+.vscode/
+.idea/

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Aura Scanner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="card" id="auth-card">
+            <h1>Welcome to Aura</h1>
+            <h2 id="form-title">Login</h2>
+            
+            <form id="auth-form">
+                <input type="email" id="auth-email" placeholder="Email" required>
+                <input type="password" id="auth-password" placeholder="Password" required>
+                <button type="submit" id="auth-button">Login</button>
+                <p id="auth-error" class="error-message"></p>
+                <p id="auth-success" style="color: green;"></p>
+            </form>
+
+            <p class="toggle-text">
+                <a href="#" id="toggle-link">Don't have an account? <b>Register.</b></a>
+            </p>
+        </div>
+    </div>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
