@@ -16,7 +16,7 @@ from bson import ObjectId
 # 3. WithJsonSchema tells the API docs (Swagger/OpenAPI) to treat it as a string.
 PyObjectId = Annotated[
     ObjectId,
-    PlainSerializer(str),
+    PlainSerializer(lambda v: str(v), return_type=str),
     WithJsonSchema({"type": "string", "example": "60d5ec49e7b2e3b2e3f1b3a1"}),
 ]
 

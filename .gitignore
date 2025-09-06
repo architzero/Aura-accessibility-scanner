@@ -1,9 +1,11 @@
 # Python / Backend
 backend/venv/
-backend/__pycache__/
-backend/*.pyc
 backend/.env
 backend/screenshots/
+
+__pycache__/
+*.pyc
+.env
 
 # IDE settings
 .vscode/
