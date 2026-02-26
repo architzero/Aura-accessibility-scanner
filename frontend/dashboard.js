@@ -122,11 +122,20 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await authenticatedFetch(`/scan/${projectId}`, { method: "POST" });
                 const result = await response.json();
-                if (!response.ok) throw new Error(result.detail);
+                if (!response.ok) {
+                    const errorMsg = result.detail || "Scan failed";
+                    if (errorMsg.includes("security policies") || errorMsg.includes("blocked")) {
+                        alert("⚠️ Unable to scan this website\n\nThis website blocks automated scanning tools. Try scanning a different website or one you own.");
+                    } else if (errorMsg.includes("Timeout")) {
+                        alert("⏱️ Scan Timeout\n\nThe website took too long to load. Please try again or use a faster website.");
+                    } else {
+                        alert("❌ Scan Failed\n\n" + errorMsg);
+                    }
+                    throw new Error(errorMsg);
+                }
                 window.location.href = `results.html?scanId=${result._id}`;
             } catch (error) {
                 console.error(error);
-                alert("An error occurred during the scan: " + error.message);
                 targetButton.textContent = "Scan Now";
                 targetButton.disabled = false;
             }

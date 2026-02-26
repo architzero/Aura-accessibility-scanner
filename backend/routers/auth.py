@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
-from datetime import timedelta, datetime # Import datetime
+from datetime import timedelta, datetime, timezone
 
 import models
 import security
 from database import users_collection
-from security import ACCESS_TOKEN_EXPIRE_MINUTES
+from config import settings
 
 router = APIRouter(tags=["Authentication"])
 
@@ -21,7 +21,7 @@ async def register_user(user: models.UserCreate):
     hashed_password = security.get_password_hash(user.password)
     user_data = user.dict()
     user_data["password"] = hashed_password
-    user_data["createdAt"] = datetime.utcnow()
+    user_data["createdAt"] = datetime.now(timezone.utc)
     
     new_user = await users_collection.insert_one(user_data)
     created_user = await users_collection.find_one({"_id": new_user.inserted_id})
@@ -38,7 +38,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
     access_token = security.create_access_token(
         data={"sub": user["email"]}, expires_delta=access_token_expires
     )

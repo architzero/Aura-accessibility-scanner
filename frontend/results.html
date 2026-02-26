@@ -9,19 +9,18 @@
 <body>
     <div class="container">
         <header>
-            <h1>Scan Result</h1>
+            <h1>📊 Scan Results</h1>
             <a href="dashboard.html">
-                <button>&larr; Back to Dashboard</button>
+                <button class="button-secondary">← Dashboard</button>
             </a>
         </header>
 
         <main id="results-container">
-            <div id="loading-state" class="card">
-                <h2>Analyzing...</h2>
-                <p>Please wait while we process the accessibility report.</p>
+            <div id="loading-state" class="card loading">
+                <h2>🔍 Analyzing Website...</h2>
+                <p>Please wait while we scan for accessibility issues.</p>
             </div>
-
-            </main>
+        </main>
     </div>
     <script src="api.js"></script>
     <script src="results.js"></script>

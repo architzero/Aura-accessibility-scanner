@@ -171,6 +171,8 @@ pydantic==2.7.1
     #   backend
     #   fastapi
     #   fastapi-cloud-cli
+pydantic-settings==2.2.1
+    # via backend
 pydantic-core==2.18.2
     # via pydantic
 pyee==11.1.0

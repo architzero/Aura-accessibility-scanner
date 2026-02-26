@@ -1,12 +1,19 @@
 # Python / Backend
 backend/venv/
 backend/.env
-backend/screenshots/
+backend/screenshots/*.png
+!backend/screenshots/placeholder.png
 
 __pycache__/
 *.pyc
+*.env
 .env
+.env.local
 
-# IDE settings
+# IDE
 .vscode/
 .idea/
+
+# OS
+.DS_Store
+Thumbs.db

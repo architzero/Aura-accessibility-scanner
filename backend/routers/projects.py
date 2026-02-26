@@ -1,18 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from bson import ObjectId
-from datetime import datetime
-import pymongo # <-- ADDED import
+from datetime import datetime, timezone
+import pymongo
 
 import models
 from database import projects_collection, scan_results_collection
 from dependencies import get_current_active_user
+from utils import validate_url, logger
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
 @router.post("/", response_model=models.Project, status_code=status.HTTP_201_CREATED)
 async def create_project(project: models.ProjectCreate, current_user: models.User = Depends(get_current_active_user)):
-    # --- ADDED: Edge case for unique project names ---
+    # Validate URL format and security
+    if not validate_url(project.url):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid URL format or unsafe URL detected"
+        )
+    
+    # Check for unique project names
     existing_project = await projects_collection.find_one({
         "projectName": project.projectName,
         "userId": ObjectId(current_user["_id"])
@@ -22,14 +30,15 @@ async def create_project(project: models.ProjectCreate, current_user: models.Use
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="A project with this name already exists."
         )
-    # --- END ---
 
     project_data = project.dict()
     project_data["userId"] = ObjectId(current_user["_id"])
-    project_data["createdAt"] = datetime.utcnow()
+    project_data["createdAt"] = datetime.now(timezone.utc)
 
     new_project = await projects_collection.insert_one(project_data)
     created_project = await projects_collection.find_one({"_id": new_project.inserted_id})
+    
+    logger.info(f"Project created: {created_project['_id']} by user {current_user['email']}")
     return created_project
 
 @router.get("/", response_model=List[models.Project])

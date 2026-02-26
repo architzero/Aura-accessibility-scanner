@@ -4,7 +4,7 @@ from jose import JWTError, jwt
 from pydantic import ValidationError
 
 import models
-import security
+from config import settings
 from database import users_collection
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
@@ -16,7 +16,7 @@ async def get_current_active_user(token: str = Depends(oauth2_scheme)):
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, security.SECRET_KEY, algorithms=[security.ALGORITHM])
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
